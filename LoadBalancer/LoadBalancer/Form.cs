@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
@@ -19,6 +20,7 @@ namespace LoadBalancer
         {
             InitializeComponent();
             Algoritme.algoritme = method_ComboBox.SelectedItem;
+            HealthMonitor.serversLst = serversLst;
         }
 
         private ListBox ServersLst
@@ -46,7 +48,7 @@ namespace LoadBalancer
             }
         }
 
-        private void serversLast_KeyDown(object sender, KeyEventArgs e)
+        private void serversLst_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
@@ -57,6 +59,20 @@ namespace LoadBalancer
                 {
                     for (int i = selectedItems.Count - 1; i >= 0; i--)
                         serversLst.Items.Remove(selectedItems[i]);
+                }
+            }
+        }
+
+        private void serversLst_DoubleClick(object sender, EventArgs e)
+        {
+            if (HealthMonitor.servers != null)
+            {
+                foreach (var server in HealthMonitor.servers)
+                {
+                    if (server[0] == (string) serversLst.SelectedItem)
+                    {
+                        MessageBox.Show(server[1] + " Requests on this server since the load balancer started");
+                    }
                 }
             }
         }

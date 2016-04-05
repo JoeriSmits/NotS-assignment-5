@@ -54,8 +54,10 @@ namespace LoadBalancer
             this.serversLst.Location = new System.Drawing.Point(19, 60);
             this.serversLst.Name = "serversLst";
             this.serversLst.Size = new System.Drawing.Size(557, 429);
+            this.serversLst.Sorted = true;
             this.serversLst.TabIndex = 0;
-            this.serversLst.KeyDown += new KeyEventHandler(this.serversLast_KeyDown);
+            this.serversLst.KeyDown += new System.Windows.Forms.KeyEventHandler(this.serversLst_KeyDown);
+            this.serversLst.DoubleClick += new System.EventHandler(this.serversLst_DoubleClick);
             // 
             // serversLst_Label
             // 
@@ -100,7 +102,7 @@ namespace LoadBalancer
             this.startStop_btn.Name = "startStop_btn";
             this.startStop_btn.Size = new System.Drawing.Size(296, 62);
             this.startStop_btn.TabIndex = 5;
-            this.startStop_btn.Text = "Start / Stop LoadBalancer";
+            this.startStop_btn.Text = "Start LoadBalancer";
             this.startStop_btn.UseVisualStyleBackColor = true;
             this.startStop_btn.Click += new System.EventHandler(this.startStop_btn_Click);
             // 

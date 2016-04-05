@@ -72,28 +72,34 @@ namespace LoadBalancer
 
                 var selectedServer = server.GetConnectionInfo();
 
-                Socket destServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                destServerSocket.Connect((selectedServer[0]), Int32.Parse(selectedServer[1]));
 
-                //State 2: Sending New Request Information to Destination Server and Relay Response to Client
-                destServerSocket.Send(ASCIIEncoding.ASCII.GetBytes(requestPayload));
-                
-                //Console.WriteLine("Begin Receiving Response...");
-                while (destServerSocket.Receive(responseBuffer) != 0)
+                try
                 {
-                    //Console.Write(ASCIIEncoding.ASCII.GetString(responseBuffer));
-                    this._clientSocket.Send(responseBuffer);
+                    TcpClient client = new TcpClient(selectedServer[0], Int32.Parse(selectedServer[1]));
+                    var stream = client.GetStream();
+
+                    stream.Write(ASCIIEncoding.ASCII.GetBytes(requestPayload), 0, ASCIIEncoding.ASCII.GetBytes(requestPayload).Length);
+                
+                    while (stream.Read(responseBuffer, 0, responseBuffer.Length) != 0)
+                    {
+                        this._clientSocket.Send(responseBuffer);
+                    }
+
+                    client.Close();
+                    stream.Dispose();
+                }
+                catch (SocketException e)
+                {
+                    Console.Write("Server has fallen", e);
+                    Handler();
                 }
 
-                destServerSocket.Disconnect(false);
-                destServerSocket.Dispose();
                 this._clientSocket.Disconnect(false);
                 this._clientSocket.Dispose();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error Occured: " + e.Message);
-                //Console.WriteLine(e.StackTrace);
             }
         }
     }

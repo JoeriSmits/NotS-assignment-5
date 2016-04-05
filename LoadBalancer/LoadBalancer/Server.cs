@@ -37,7 +37,8 @@ namespace LoadBalancer
                     }
                     break;
             }
-            
+            HealthMonitor.addConnection(serverChosen);
+
             var connectInfo = GetHostAndPort(servers[serverChosen] as string);
             return connectInfo;
         }
