@@ -1,4 +1,6 @@
-﻿namespace LoadBalancer
+﻿using System.Windows.Forms;
+
+namespace LoadBalancer
 {
     partial class Form
     {
@@ -36,16 +38,24 @@
             this.startStop_btn = new System.Windows.Forms.Button();
             this.method_Label = new System.Windows.Forms.Label();
             this.method_ComboBox = new System.Windows.Forms.ComboBox();
+            this.addServer_txtBox = new System.Windows.Forms.TextBox();
+            this.addServer_btn = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // serversLst
             // 
             this.serversLst.FormattingEnabled = true;
             this.serversLst.ItemHeight = 25;
+            this.serversLst.Items.AddRange(new object[] {
+            "http://localhost:8081",
+            "http://localhost:8082",
+            "http://localhost:8083"});
             this.serversLst.Location = new System.Drawing.Point(19, 60);
             this.serversLst.Name = "serversLst";
             this.serversLst.Size = new System.Drawing.Size(557, 429);
             this.serversLst.TabIndex = 0;
+            this.serversLst.KeyDown += new KeyEventHandler(this.serversLast_KeyDown);
             // 
             // serversLst_Label
             // 
@@ -92,6 +102,7 @@
             this.startStop_btn.TabIndex = 5;
             this.startStop_btn.Text = "Start / Stop LoadBalancer";
             this.startStop_btn.UseVisualStyleBackColor = true;
+            this.startStop_btn.Click += new System.EventHandler(this.startStop_btn_Click);
             // 
             // method_Label
             // 
@@ -109,17 +120,47 @@
             "Session Based",
             "Cookie Based",
             "Round Robin",
-            "Load (Requests / Server)"});
+            "Random"});
             this.method_ComboBox.Location = new System.Drawing.Point(736, 185);
             this.method_ComboBox.Name = "method_ComboBox";
             this.method_ComboBox.Size = new System.Drawing.Size(296, 33);
             this.method_ComboBox.TabIndex = 7;
+            this.method_ComboBox.SelectedIndexChanged += new System.EventHandler(this.method_ComboBox_SelectedIndexChanged);
+            // 
+            // addServer_txtBox
+            // 
+            this.addServer_txtBox.Location = new System.Drawing.Point(603, 292);
+            this.addServer_txtBox.Name = "addServer_txtBox";
+            this.addServer_txtBox.Size = new System.Drawing.Size(236, 31);
+            this.addServer_txtBox.TabIndex = 8;
+            // 
+            // addServer_btn
+            // 
+            this.addServer_btn.Location = new System.Drawing.Point(845, 292);
+            this.addServer_btn.Name = "addServer_btn";
+            this.addServer_btn.Size = new System.Drawing.Size(187, 43);
+            this.addServer_btn.TabIndex = 9;
+            this.addServer_btn.Text = "Add Server";
+            this.addServer_btn.UseVisualStyleBackColor = true;
+            this.addServer_btn.Click += new System.EventHandler(this.addServer_btn_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(598, 251);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(203, 25);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Add server with port";
             // 
             // Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1052, 507);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.addServer_btn);
+            this.Controls.Add(this.addServer_txtBox);
             this.Controls.Add(this.method_ComboBox);
             this.Controls.Add(this.method_Label);
             this.Controls.Add(this.startStop_btn);
@@ -145,6 +186,9 @@
         private System.Windows.Forms.Button startStop_btn;
         private System.Windows.Forms.Label method_Label;
         private System.Windows.Forms.ComboBox method_ComboBox;
+        private System.Windows.Forms.TextBox addServer_txtBox;
+        private System.Windows.Forms.Button addServer_btn;
+        private System.Windows.Forms.Label label1;
     }
 }
 
