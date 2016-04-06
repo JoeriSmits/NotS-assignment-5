@@ -16,7 +16,7 @@ namespace LoadBalancer
             this.servers = servers;
         }
 
-        public string[] GetConnectionInfo(string cookie)
+        public string[] GetConnectionInfo(string cookie, string session)
         {
             int serverChosen = 0;
             switch (Algoritme.Get())
@@ -63,6 +63,75 @@ namespace LoadBalancer
                             serverChosen = j;
                         }
                         j++;
+                    }
+                    break;
+                case "Session Based":
+                    var sessions = Algoritme.sessionsPerServer;
+
+                    if (session == null)
+                    {
+                        serverChosen = Algoritme.roundRobinPos;
+                        if (Algoritme.roundRobinPos != servers.Count - 1)
+                        {
+                            Algoritme.roundRobinPos++;
+                        }
+                        else
+                        {
+                            Algoritme.roundRobinPos = 0;
+                        }
+                    }
+                    else
+                    {
+                        var isAlreadyStored = false;
+                        object selectedServer = null;
+
+                        foreach (var stringse in Algoritme.sessionsPerServer)
+                        {
+                            if (session == stringse[0])
+                            {
+                                isAlreadyStored = true;
+                                selectedServer = stringse[1];
+                            }
+                        }
+
+                        if (isAlreadyStored)
+                        {
+                            var l = 0;
+                            foreach (var server in servers)
+                            {
+                                if (server == selectedServer)
+                                {
+                                    serverChosen = l;
+                                }
+                                l++;
+                            }
+                        }
+                        else
+                        {
+                            // Add new session id to the local storage
+                            var k = 0;
+                            string[] sessionPerServer = null;
+                            if (Algoritme.roundRobinPos != 0)
+                            {
+                                Algoritme.roundRobinPos--;
+                            }
+                            else
+                            {
+                                Algoritme.roundRobinPos = servers.Count - 1;
+                            }
+                        
+                            foreach (var server in servers)
+                            {
+                                if (k == Algoritme.roundRobinPos)
+                                {
+                                    sessionPerServer = new string[] {session, server.ToString()};
+                                }
+                                k++;
+                            }
+                            serverChosen = Algoritme.roundRobinPos;
+                            Algoritme.sessionsPerServer.Add(sessionPerServer); 
+                        }
+
                     }
                     break;
             }

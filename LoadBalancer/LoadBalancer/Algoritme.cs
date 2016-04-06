@@ -13,7 +13,8 @@ namespace LoadBalancer
     {
         public static object algoritme;
         public static int roundRobinPos = 0;
-        public static List<string[]> requestPerServer = new List<string[]>(); 
+        public static List<string[]> requestPerServer = new List<string[]>();
+        public static List<string[]> sessionsPerServer = new List<string[]>(); 
 
         public static string Get()
         {

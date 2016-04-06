@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -64,6 +65,8 @@ namespace LoadBalancer
                 }
 
                 string cookie = null;
+                string session = null;
+                string url = null;
                 requestPayload = "";
                 foreach (string line in requestLines)
                 {
@@ -76,7 +79,15 @@ namespace LoadBalancer
 
                     if (line.Contains("Cookie"))
                     {
-                        cookie = line.Split('=')[1];
+                        switch (Algoritme.Get())
+                        {
+                            case "Cookie Based":
+                                cookie = line.Split('=')[1];  
+                                break;
+                            case "Session Based":
+                                session = line.Split('=')[1];
+                                break;
+                        }   
                     }
 
                     if (addLines)
@@ -86,7 +97,7 @@ namespace LoadBalancer
                     }
                 }
 
-                var selectedServer = server.GetConnectionInfo(cookie);
+                var selectedServer = server.GetConnectionInfo(cookie, session);
 
                 try
                 {
