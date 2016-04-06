@@ -11,11 +11,23 @@ namespace LoadBalancer
     {
         private ListBox.ObjectCollection servers;
 
+        /// <summary>
+        /// Server constructor
+        /// Set's the server propery to the one give in the constructor
+        /// </summary>
+        /// <param name="servers"></param>
         public Server(ListBox.ObjectCollection servers)
         {
             this.servers = servers;
         }
 
+        /// <summary>
+        /// Determine what server the server class has to connect to.
+        /// It takes the algorithm and based on that it will choose the server
+        /// </summary>
+        /// <param name="cookie">Cookie if there is any otherwise it is null</param>
+        /// <param name="session">Session if there is any otherwise it is null</param>
+        /// <returns>Server object with connect information</returns>
         public string[] GetConnectionInfo(string cookie, string session)
         {
             int serverChosen = 0;
@@ -37,6 +49,7 @@ namespace LoadBalancer
                     }
                     break;
                 case "Load":
+                    // Chooses the server with the less Load. What is based on the current amount of connections to a server.
                     serverChosen = 0;
                     List<int> requestsServers = new List<int>();
                     foreach (var serverRequest in Algoritme.requestPerServer)
@@ -68,6 +81,7 @@ namespace LoadBalancer
                 case "Session Based":
                     var sessions = Algoritme.sessionsPerServer;
 
+                    // If there is no session set yet it will choose a server based on Round Robin
                     if (session == null)
                     {
                         serverChosen = Algoritme.roundRobinPos;
@@ -80,8 +94,10 @@ namespace LoadBalancer
                             Algoritme.roundRobinPos = 0;
                         }
                     }
+                    // There is a session
                     else
                     {
+                        // Check if the session is already stored in our list of stored sessions
                         var isAlreadyStored = false;
                         object selectedServer = null;
 
@@ -96,6 +112,7 @@ namespace LoadBalancer
 
                         if (isAlreadyStored)
                         {
+                            // The session is already stored
                             var l = 0;
                             foreach (var server in servers)
                             {
@@ -108,6 +125,7 @@ namespace LoadBalancer
                         }
                         else
                         {
+                            // Session is not stored yet
                             // Add new session id to the local storage
                             var k = 0;
                             string[] sessionPerServer = null;
@@ -135,16 +153,22 @@ namespace LoadBalancer
                     }
                     break;
             }
+            // Keep track of the requests for health monitoring
             HealthMonitor.addConnection(serverChosen);
 
+            // Return the connectInfo to the server class
             var connectInfo = GetHostAndPort(servers[serverChosen] as string);
             return connectInfo;
         }
 
+        /// <summary>
+        /// Parse a string that is a valid url to seperate the host and the port
+        /// </summary>
+        /// <param name="url">A valid URL</param>
+        /// <returns>string array with the host and the port of the input url</returns>
         private string[] GetHostAndPort(string url)
         {
             string[] result = { url.Split('/')[2].Split(':')[0], url.Split('/')[2].Split(':')[1] };
-
             return result;
         }
     }

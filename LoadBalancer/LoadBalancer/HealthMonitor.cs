@@ -13,7 +13,10 @@ namespace LoadBalancer
         public static ListBox serversLst;
         public static List<String[]> servers = new List<string[]>();
 
-
+        /// <summary>
+        /// Add the request to our list that keeps track of all the requests per server for health monitoring purposes.
+        /// </summary>
+        /// <param name="serverChosen">The server</param>
         public static void addConnection(int serverChosen)
         {
             foreach (var server in servers)

@@ -16,11 +16,20 @@ namespace LoadBalancer
         public static List<string[]> requestPerServer = new List<string[]>();
         public static List<string[]> sessionsPerServer = new List<string[]>(); 
 
+        /// <summary>
+        /// Get's the current algorithm selected by the user
+        /// </summary>
+        /// <returns></returns>
         public static string Get()
         {
             return (string) algoritme;
         }
 
+        /// <summary>
+        /// Calculate a MD5 has of the give input
+        /// </summary>
+        /// <param name="input">A string that will be converted to MD5</param>
+        /// <returns>MD5 String</returns>
         public static string CalculateMD5Hash(string input)
         {
             // step 1, calculate MD5 hash from input
