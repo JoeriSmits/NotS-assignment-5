@@ -26,6 +26,16 @@ namespace LoadBalancer
                 }
             }
 
+            foreach (var server in Algoritme.requestPerServer)
+            {
+                if (server[0] == (string)serversLst.Items[serverChosen])
+                {
+                    var requests = Int32.Parse(server[1]);
+                    requests++;
+                    server[1] = requests.ToString();
+                }
+            }
+
             // Check if the server is already in list. If not it will add the server
             var alreadyInList = false;
             foreach (var server in servers)
@@ -38,6 +48,7 @@ namespace LoadBalancer
             if (!alreadyInList)
             {
                 string[] stringArrayOfServer = { (string)serversLst.Items[serverChosen], "1" };
+                Algoritme.requestPerServer.Add(stringArrayOfServer);
                 servers.Add(stringArrayOfServer);
             }
         }

@@ -36,6 +36,27 @@ namespace LoadBalancer
                         Algoritme.roundRobinPos = 0;
                     }
                     break;
+                case "Load":
+                    serverChosen = 0;
+                    List<int> requestsServers = new List<int>();
+                    foreach (var serverRequest in Algoritme.requestPerServer)
+                    {
+                        requestsServers.Add(Int32.Parse(serverRequest[1]));
+                    }
+
+                    var i = 0;
+                    foreach (var requestsServer in requestsServers)
+                    {
+                        if (requestsServer == requestsServers.Min())
+                        {
+                            serverChosen = i;
+                        }
+                        i++;
+                    }
+                    break;
+                case "Cookie Based":
+
+                    break;
             }
             HealthMonitor.addConnection(serverChosen);
 

@@ -56,8 +56,8 @@ namespace LoadBalancer
             this.serversLst.Size = new System.Drawing.Size(557, 429);
             this.serversLst.Sorted = true;
             this.serversLst.TabIndex = 0;
-            this.serversLst.KeyDown += new System.Windows.Forms.KeyEventHandler(this.serversLst_KeyDown);
             this.serversLst.DoubleClick += new System.EventHandler(this.serversLst_DoubleClick);
+            this.serversLst.KeyDown += new System.Windows.Forms.KeyEventHandler(this.serversLst_KeyDown);
             // 
             // serversLst_Label
             // 
@@ -122,7 +122,8 @@ namespace LoadBalancer
             "Session Based",
             "Cookie Based",
             "Round Robin",
-            "Random"});
+            "Random",
+            "Load"});
             this.method_ComboBox.Location = new System.Drawing.Point(736, 185);
             this.method_ComboBox.Name = "method_ComboBox";
             this.method_ComboBox.Size = new System.Drawing.Size(296, 33);

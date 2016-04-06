@@ -85,6 +85,14 @@ namespace LoadBalancer
                         this._clientSocket.Send(responseBuffer);
                     }
 
+                    foreach (var serverRequest in Algoritme.requestPerServer)
+                    {
+                        if (serverRequest[0] == selectedServer[0])
+                        {
+                            Algoritme.requestPerServer.Remove(serverRequest);
+                        }
+                    }
+
                     client.Close();
                     stream.Dispose();
                 }
