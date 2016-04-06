@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -60,18 +62,31 @@ namespace LoadBalancer
                         recvRequest = false;
                     }
                 }
-                Console.WriteLine("Raw Request Received...");
-                Console.WriteLine(requestPayload);
 
+                string cookie = null;
                 requestPayload = "";
                 foreach (string line in requestLines)
                 {
-                    requestPayload += line;
-                    requestPayload += EOL;
+                    var addLines = true;
+
+                    if (line.Contains("Accept-Encoding"))
+                    {
+                        addLines = false;
+                    }
+
+                    if (line.Contains("Cookie"))
+                    {
+                        cookie = line.Split('=')[1];
+                    }
+
+                    if (addLines)
+                    {
+                        requestPayload += line;
+                        requestPayload += EOL;
+                    }
                 }
 
-                var selectedServer = server.GetConnectionInfo();
-
+                var selectedServer = server.GetConnectionInfo(cookie);
 
                 try
                 {
@@ -79,10 +94,79 @@ namespace LoadBalancer
                     var stream = client.GetStream();
 
                     stream.Write(ASCIIEncoding.ASCII.GetBytes(requestPayload), 0, ASCIIEncoding.ASCII.GetBytes(requestPayload).Length);
-                
-                    while (stream.Read(responseBuffer, 0, responseBuffer.Length) != 0)
+
+
+                    if (Algoritme.Get() == "Cookie Based")
                     {
-                        this._clientSocket.Send(responseBuffer);
+                        string response = null;
+                        var contentLengthIsAvailable = false;
+                        var headersInThePocket = false;
+                        int contentLength = 0;
+
+
+                        StringBuilder responseBytes = null;
+                        var i = 0;
+                        while (true)
+                        {
+                            stream.Read(responseBuffer, 0, responseBuffer.Length);
+
+                            response += Encoding.ASCII.GetString(responseBuffer);
+
+                            if (response.EndsWith(EOL + EOL))
+                            {
+                                response = response.Split(new[] { EOL + EOL }, StringSplitOptions.None)[0];
+                                var connectionCookie = selectedServer[0] + ":" + selectedServer[1];
+                                response += EOL + "Set-Cookie: fixed-server=" + Algoritme.CalculateMD5Hash(connectionCookie) + EOL + EOL;
+
+                                var headers = response.Split(':');
+
+                                var contentLengthAvailable = false;
+                                foreach (var header in headers)
+                                {
+                                    if (contentLengthAvailable)
+                                    {
+                                        contentLength = int.Parse(header.Split('\r')[0]);
+                                        contentLengthAvailable = false;
+                                    }
+
+                                    if (header.EndsWith("Content-Length"))
+                                    {
+                                        contentLengthAvailable = true;
+                                    }
+                                }
+                                responseBytes = new StringBuilder(response);
+                                headersInThePocket = true;
+                            }
+
+                            if (headersInThePocket)
+                            {
+                                if (contentLength == 0)
+                                {
+                                    contentLength = 2000;
+                                }
+                                if (i < contentLength)
+                                {
+                                    responseBytes.Append(Encoding.ASCII.GetString(responseBuffer));
+                                    i++;
+                                }
+                                else
+                                {
+                                    var charResponse = responseBytes.ToString().ToCharArray(0, responseBytes.Length);
+                                    byte[] test = Encoding.ASCII.GetBytes(charResponse);
+
+                                    _clientSocket.Send(test);
+                                    break;  
+                                }
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        while (stream.Read(responseBuffer, 0, responseBuffer.Length) != 0)
+                        {
+                            this._clientSocket.Send(responseBuffer);
+                        }
                     }
 
                     foreach (var serverRequest in Algoritme.requestPerServer)

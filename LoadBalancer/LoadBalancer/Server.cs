@@ -16,7 +16,7 @@ namespace LoadBalancer
             this.servers = servers;
         }
 
-        public string[] GetConnectionInfo()
+        public string[] GetConnectionInfo(string cookie)
         {
             int serverChosen = 0;
             switch (Algoritme.Get())
@@ -55,7 +55,15 @@ namespace LoadBalancer
                     }
                     break;
                 case "Cookie Based":
-
+                    var j = 0;
+                    foreach (var server in servers)
+                    {
+                        if (server.ToString().Split('/')[2] == cookie)
+                        {
+                            serverChosen = j;
+                        }
+                        j++;
+                    }
                     break;
             }
             HealthMonitor.addConnection(serverChosen);
