@@ -27,3 +27,4 @@ De server stuurt een cookie naar de gebruiker met een MD5 hash. Deze hash koppel
 Het algoritme begint met een round robin algoritme totdat de server een session tegenkomt. Wanneer dit zo is wordt dit session id opgeslagen en wordt het session id gekoppeld aan de server. Hierdoor blijft de gebruiker bij één specifieke server voor stateful.
 
 ### Architectuur diagram van de applicatie
+![Architectuur diagram](https://github.com/JoeriSmits/NotS-assignment-5/LoadBalancer.png "Load balancer Architectuur Diagram")
