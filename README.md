@@ -159,3 +159,8 @@ Wat een optie zou kunnen zijn is dat iedere server zelf health monitoring toepas
 ### Authentieke en gezaghebbende bronnen
 Healthcare IT Monitoring. (n.d.). Retrieved April 07, 2016, from https://www.paessler.com/healthcare_it_monitoring
 
+## Definieer kwaliteit in je architectuur, design, implementatie
+Wat ik erg goed vind gelukt in deze applicatie is de mogelijkheid om makkelijk nieuwe algoritmes toe te voegen. Het is een kwestie van het algortime implementeren en actief zetten in de callback van de combobox. Daarna kan het algoritme worden gebruikt. Daarnaast heb ik alles geprobeerd in zoveel mogelijk individuele klassen te stoppen, om zo de code per file klein te houden. Het ontwerp voor de loadbalancer is afgeleid vanaf de proxy wat tijd heeft gescheeld inplaats van vanaf niks beginnen. De proxy code was met een paar wijzigingen prima te gebruiken als start code voor deze applicatie. 
+Wat ik ook erg mooi vind is dat ik nog steeds op TCP niveau zit en dat POST/PUT/DELETE etc. werkt.
+####Wat kan er beter, waarom?
+Als er iets beter kon dan is het denk ik de globale structuur van de applicatie. Graag had ik voorzichtiger gedaan met static klassen en beter nagedacht over welke klassen ik allemaal nodig heb. Deze structuur heeft vaak als resultaat dat andere developers de code beter snappen, en dat, mochten er wijzigingen nodig zijn, de code beter aan te passen is.
