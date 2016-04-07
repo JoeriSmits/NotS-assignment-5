@@ -137,5 +137,25 @@ Een alternatief zou kunnen zijn om een cookie te zetten wanneer de situatie stat
 ### Authentieke en gezaghebbende bronnen
 NGINX. (n.d.). What is Session Persistence? Retrieved April 07, 2016, from https://www.nginx.com/resources/glossary/session-persistence/
 
+## Health Monitoring implementatie, keuzes en algoritmiek
+### Beschrijving van concept
+Health monitoring bij een load balancer is het bijven bijhouden van het aantal requests die zijn gemaakt naar een server. Hierdoor kan je bepalen hoeveel load een server momenteel heeft en de gebruiker bijvoorbeeld een waarschuwing geven als deze te hoog wordt.
 
+### code voorbeelden
+```cs
+foreach (var server in servers)
+            {
+                if (server[0] == (string) serversLst.Items[serverChosen])
+                {
+                    var requests = Int32.Parse(server[1]);
+                    requests++;
+                    server[1] = requests.ToString();
+                }
+            }
+  ```
+### Alternatieven
+Wat een optie zou kunnen zijn is dat iedere server zelf health monitoring toepast en zichzelf uitschakeld als er teveel load op de server komt te liggen.
+
+### Authentieke en gezaghebbende bronnen
+Healthcare IT Monitoring. (n.d.). Retrieved April 07, 2016, from https://www.paessler.com/healthcare_it_monitoring
 
