@@ -21,7 +21,7 @@ Het algoritme pakt een willekeurige server uit de serverlijst.
 Het algoritme kijkt naar de requests van iedere server die op dit moment worden afgehandeld. De gebruiker wordt gekoppeld aan de server met het minste requests.
 
 #### Cookie Based
-De server stuurt een cookie naar de gebruiker met een MD5 hash. Deze hash koppeld de gebruiker aan één specifieke server voor stateful.
+De server stuurt een cookie naar de gebruiker met een MD5 hash. Deze hash koppelt de gebruiker aan één specifieke server voor stateful.
 
 #### Session Based
 Het algoritme begint met een round robin algoritme totdat de server een session tegenkomt. Wanneer dit zo is wordt dit session id opgeslagen en wordt het session id gekoppeld aan de server. Hierdoor blijft de gebruiker bij één specifieke server voor stateful.
