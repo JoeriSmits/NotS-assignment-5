@@ -28,3 +28,25 @@ Het algoritme begint met een round robin algoritme totdat de server een session 
 
 ### Architectuur diagram van de applicatie
 ![Architectuur diagram](https://github.com/JoeriSmits/NotS-assignment-5/blob/master/LoadBalancer.png "Load balancer Architectuur Diagram")
+
+## Verdeling van load over HTTP‐Servers
+### Beschrijving van concept
+Verdeling van load (Load Balancing) is een techniek om het HTTP verkeer te verdelen tussen verschillende servers.
+De techniek is handig bij het gebruik van web servers om zo de betrouwbaarheid te verhogen, of een groter aanbod aan te kunnen. Ook kan men door middel van deze techniek een machine uitzetten en hieraan werken zonder dat de gebruiker dit merkt.
+
+### Code voorbeelden
+```cs
+// Determine what server we need to connect to
+                var selectedServer = _server.GetConnectionInfo(cookie, session);
+
+                // Try to connect to the chosen server
+                try
+                {
+                    TcpClient client = new TcpClient(selectedServer[0], Int32.Parse(selectedServer[1]));
+                    var stream = client.GetStream();
+```
+
+### Alternatieven
+
+
+
