@@ -47,6 +47,95 @@ De techniek is handig bij het gebruik van web servers om zo de betrouwbaarheid t
 ```
 
 ### Alternatieven
+Door bijvoorbeeld gebruik te maken van serviceworker kan je de web applicatie locaal bij de gebruiker hosten. Enige requests die de gebruiker doet worden (als niet zijn gecached) opgeslagen en uitgevoerd wanneer er weer connectie is met een server. Hierdoor hoeft de gebruikerservaring niet beschadigd te worden tijdens momenten van veel load.
+
+### Authentieke en gezaghebbende bronnen
+Meijden, A. V. (2002, May 22). Loadbalancing bij Tweakers.net. Retrieved April 07, 2016, from http://tweakers.net/reviews/301/loadbalancing-bij-tweakers-punt-net.html
+
+## Session Persistence implementatie, keuzes en algoritmiek
+### Beschrijving van concept
+Session persistence is het versturen van het HTTP request naar dezelfde server wanneer er een sessie actief is voor een taak of bijvoorbeeld een transactie.
+
+### Code voorbeelden
+```cs
+var sessions = Algoritme.sessionsPerServer;
+
+                    // If there is no session set yet it will choose a server based on Round Robin
+                    if (session == null)
+                    {
+                        serverChosen = Algoritme.roundRobinPos;
+                        if (Algoritme.roundRobinPos != servers.Count - 1)
+                        {
+                            Algoritme.roundRobinPos++;
+                        }
+                        else
+                        {
+                            Algoritme.roundRobinPos = 0;
+                        }
+                    }
+                    // There is a session
+                    else
+                    {
+                        // Check if the session is already stored in our list of stored sessions
+                        var isAlreadyStored = false;
+                        object selectedServer = null;
+
+                        foreach (var stringse in Algoritme.sessionsPerServer)
+                        {
+                            if (session == stringse[0])
+                            {
+                                isAlreadyStored = true;
+                                selectedServer = stringse[1];
+                            }
+                        }
+
+                        if (isAlreadyStored)
+                        {
+                            // The session is already stored
+                            var l = 0;
+                            foreach (var server in servers)
+                            {
+                                if (server == selectedServer)
+                                {
+                                    serverChosen = l;
+                                }
+                                l++;
+                            }
+                        }
+                        else
+                        {
+                            // Session is not stored yet
+                            // Add new session id to the local storage
+                            var k = 0;
+                            string[] sessionPerServer = null;
+                            if (Algoritme.roundRobinPos != 0)
+                            {
+                                Algoritme.roundRobinPos--;
+                            }
+                            else
+                            {
+                                Algoritme.roundRobinPos = servers.Count - 1;
+                            }
+                        
+                            foreach (var server in servers)
+                            {
+                                if (k == Algoritme.roundRobinPos)
+                                {
+                                    sessionPerServer = new string[] {session, server.ToString()};
+                                }
+                                k++;
+                            }
+                            serverChosen = Algoritme.roundRobinPos;
+                            Algoritme.sessionsPerServer.Add(sessionPerServer); 
+                        }
+
+```
+
+### Alternatieven
+Een alternatief zou kunnen zijn om een cookie te zetten wanneer de situatie stateful moet zijn. Hierdoor kan je een cookie aan een server address of id koppelen en zo session persistence behouden.
+
+### Authentieke en gezaghebbende bronnen
+NGINX. (n.d.). What is Session Persistence? Retrieved April 07, 2016, from https://www.nginx.com/resources/glossary/session-persistence/
 
 
 
